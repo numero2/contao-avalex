@@ -17,3 +17,9 @@
  * FRONT END MODULES
  */
 $GLOBALS['FE_MOD']['miscellaneous']['avalex_privacy_policy'] = '\numero2\avalex\ModuleAvalexPrivacyPolicy';
+
+
+/**
+ * HOOKS
+ */
+$GLOBALS['TL_HOOKS']['getSystemMessages'][] = array('\numero2\avalex\AvalexBackend', 'getSystemMessages');

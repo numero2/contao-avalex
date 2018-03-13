@@ -30,13 +30,6 @@ class ModuleAvalexPrivacyPolicy extends \Module {
 
 
     /**
-     * API Endpoint
-     * @var string
-     */
-    const URL = 'https://clicklegal.azurewebsites.net/datenschutzerklaerung';
-
-
-    /**
      * Display a wildcard in the back end
      * @return string
      */
@@ -71,56 +64,14 @@ class ModuleAvalexPrivacyPolicy extends \Module {
 
         $this->Template = new \FrontendTemplate(empty($this->customTpl)?$this->strTemplate:$this->customTpl);
 
-        try {
+        if( !empty($this->avalex_apikey) ) {
 
-            $url  = self::URL.'?apikey='.$this->avalex_apikey;
+            $oAPI = NULL;
+            $oAPI = new AvalexAPI( $this->avalex_apikey );
 
-            // Contao 4 and above
-            if( class_exists('\GuzzleHttp\Client') ) {
+            $policy = $oAPI->getPrivacyPolicy();
 
-                $request = new \GuzzleHttp\Client(
-                    [
-                        \GuzzleHttp\RequestOptions::TIMEOUT         => 5,
-                        \GuzzleHttp\RequestOptions::CONNECT_TIMEOUT => 5,
-                        \GuzzleHttp\RequestOptions::HTTP_ERRORS     => false,
-                    ]
-                );
-                $response = $request->get($url);
-
-                if( $response->getStatusCode() != 200 ) {
-                    throw new \RuntimeException($response->getReasonPhrase());
-                }
-
-                $responseBody = $response->getBody()->getContents();
-
-
-            // Contao 3
-            } else {
-
-                $oRequest = NULL;
-                $oRequest = new \Request();
-
-                $oRequest->send($url);
-
-                if( $oRequest->code != 200 ) {
-
-                    if( $oRequest->hasError ) {
-                        throw new \RuntimeException($oRequest->error);
-                    } else {
-                        throw new \RuntimeException("Not responding with status code 200, received: ".$oRequest->code );
-                    }
-                }
-
-                $responseBody = $oRequest->response;
-            }
-
-            if( !empty($responseBody) ) {
-                $this->Template->content = $responseBody;
-            }
-
-        } catch( \Exception $e ) {
-
-            \System::log('Exception while retrieving data from avalex (' . $e->getMessage() . ')', __METHOD__, TL_ERROR);
+            $this->Template->content = $policy;
         }
     }
 }

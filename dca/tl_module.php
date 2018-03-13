@@ -23,8 +23,43 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['avalex_privacy_policy'] = '{title_l
  * Add fields to tl_module
  */
 $GLOBALS['TL_DCA']['tl_module']['fields']['avalex_apikey'] = array(
-    'label'               => &$GLOBALS['TL_LANG']['tl_module']['avalex_apikey']
-,   'inputType'           => 'text'
-,   'eval'                => array('mandatory'=>true, 'tl_class'=>'w50')
-,   'sql'                 => "varchar(255) NOT NULL default ''"
+    'label'         => &$GLOBALS['TL_LANG']['tl_module']['avalex_apikey']
+,   'inputType'     => 'text'
+,   'eval'          => array('mandatory'=>true, 'tl_class'=>'w50')
+,   'load_callback' => array( array('tl_module_avalex', 'checkAPIKey') )
+,   'sql'           => "varchar(255) NOT NULL default ''"
 );
+$GLOBALS['TL_DCA']['tl_module']['fields']['avalex_cache'] = array(
+    'sql'           => "text NULL"
+);
+
+
+class tl_module_avalex extends \Backend {
+
+
+    /**
+     * Checks if the entered api key is valid
+     *
+     * @param mixed         $value
+     * @param DataContainer $dc
+     *
+     * @return string
+     */
+    public function checkAPIKey( $value, DataContainer $dc ) {
+
+        if( $value ) {
+
+            $oAPI = NULL;
+            $oAPI = new \numero2\avalex\AvalexAPI( $value );
+
+            if( $oAPI->isConfigured() ) {
+                \Message::addNew($GLOBALS['TL_LANG']['avalex']['msg']['key_valid']);
+            } else {
+                \Message::addError($GLOBALS['TL_LANG']['avalex']['msg']['key_invalid']);
+                return false;
+            }
+
+            return $value;
+        }
+    }
+}

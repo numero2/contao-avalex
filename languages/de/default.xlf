@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<xliff version="1.1">
+<file datatype="php" original="system/modules/avalex/languages/de/default.php" source-language="en" target-language="de">
+<body>
+    <trans-unit id="avalex.msg.key_valid">
+        <source>The key you entered seems to be valid.</source>
+        <target>Der von Ihnen eingegebene API-Schlüssel scheint gültig zu sein.</target>
+    </trans-unit>
+    <trans-unit id="avalex.msg.key_invalid">
+        <source>The key you entered is invalid.</source>
+        <target>Der von Ihnen eingegebene API-Schlüssel scheint ungültig zu sein.</target>
+    </trans-unit>
+    <trans-unit id="avalex.msg.update_failed">
+        <source>[%s] Could not update the avalex privacy policy.</source>
+        <target>[%s] Die avalex Datenschutzerklärung konnte nicht aktualisiert werden.</target>
+    </trans-unit>
+    <trans-unit id="avalex.msg.last_update">
+        <source>Last avalex update was on %s.</source>
+        <target>Die avalex Datenschutzerklärung wurde zuletzt am %s aktualisiert.</target>
+    </trans-unit>
+</body>
+</file>
+</xliff>

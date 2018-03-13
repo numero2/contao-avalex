@@ -27,8 +27,12 @@ ClassLoader::addNamespaces(array
  */
 ClassLoader::addClasses(array
 (
+    // Classes
+    'numero2\avalex\AvalexAPI'                  => 'system/modules/avalex/classes/AvalexAPI.php',
+    'numero2\avalex\AvalexBackend'                    => 'system/modules/avalex/classes/AvalexBackend.php',
+
     // Modules
-    'numero2\avalex\ModuleAvalexPrivacyPolicy'     => 'system/modules/avalex/modules/ModuleAvalexPrivacyPolicy.php',
+    'numero2\avalex\ModuleAvalexPrivacyPolicy'  => 'system/modules/avalex/modules/ModuleAvalexPrivacyPolicy.php',
 ));
 
 
