@@ -3,12 +3,16 @@
 <file datatype="php" original="system/modules/avalex/languages/de/default.php" source-language="en" target-language="de">
 <body>
     <trans-unit id="avalex.msg.key_valid">
-        <source>The key you entered seems to be valid.</source>
-        <target>Der von Ihnen eingegebene API-Schlüssel scheint gültig zu sein.</target>
+        <source>The key you entered is valid.</source>
+        <target>Der von Ihnen eingegebene API-Schlüssel ist gültig.</target>
     </trans-unit>
     <trans-unit id="avalex.msg.key_invalid">
-        <source>The key you entered is invalid.</source>
-        <target>Der von Ihnen eingegebene API-Schlüssel scheint ungültig zu sein.</target>
+        <source>The key you entered appears to be invalid (%s).</source>
+        <target>Der von Ihnen eingegebene API-Schlüssel scheint ungültig zu sein (%s).</target>
+    </trans-unit>
+    <trans-unit id="avalex.msg.key_invalid_domain">
+        <source>The current domain of the server does not match the domain %s you entered in avalex.</source>
+        <target>Die aktuelle Domain des Servers stimmt nicht mit der Domain %s überein, die Sie in avalex eingegeben haben.</target>
     </trans-unit>
     <trans-unit id="avalex.msg.update_failed">
         <source>[%s] Could not update the avalex privacy policy.</source>

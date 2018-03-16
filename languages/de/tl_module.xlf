@@ -7,8 +7,8 @@
         <target>API Schlüssel</target>
     </trans-unit>
     <trans-unit id="tl_module.avalex_apikey.1">
-        <source>API key for accessing your content</source>
-        <target>API Schlüssel zu Ihrem personalisierter Inhalt</target>
+        <source>API key for accessing your privacy policy.</source>
+        <target>API Schlüssel zu Ihrer Datenschutzerklärung.</target>
     </trans-unit>
 </body>
 </file>

@@ -46,4 +46,34 @@ class AvalexBackend {
             return '<p class="tl_info">'.$msg.'</p>';
         }
     }
+
+
+    /**
+     * Updates the privacy policies if necessary
+     *
+     * @return boolean
+     */
+    public function updatePrivacyPolicy() {
+
+        // find frontend module
+        $oModules = NULL;
+        $oModules = \ModuleModel::findOneByType('avalex_privacy_policy');
+
+        if( $oModules ) {
+
+            while( $oModules->next() ) {
+
+                try {
+
+                    $oAPI = NULL;
+                    $oAPI = new \numero2\avalex\AvalexAPI( $oModules->avalex_apikey );
+
+                    $oAPI->getPrivacyPolicy();
+
+                } catch ( \Exception $e ) {
+
+                }
+            }
+        }
+    }
 }

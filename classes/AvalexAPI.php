@@ -61,11 +61,43 @@ class AvalexAPI {
 
         $response = $this->send('/api_keys/is_configured.json');
 
-        if( !empty($response) ) {
+        if( $response instanceof \stdClass ) {
+
+            return sprintf(
+                $GLOBALS['TL_LANG']['avalex']['msg']['key_invalid']
+            ,   $response->data
+            );
+
+        } else {
+
+            $res = json_decode($response);
+
+            // check if domains match
+            if( !empty($res->domain) ) {
+
+                // check current domain
+                if( strpos( \Environment::get('host'), $res->domain ) !== 0 ) {
+
+                    // check if we have any root page with matching domain
+                    $oPages = NULL;
+                    $oPages = \PageModel::findOneBy( array('type=?','dns=?'), array('root',$res->domain) );
+
+                    if( $oPages ) {
+
+                        return true;
+
+                    } else {
+
+                        return sprintf(
+                            $GLOBALS['TL_LANG']['avalex']['msg']['key_invalid_domain']
+                            ,   $res->domain
+                        );
+                    }
+                }
+            }
+
             return true;
         }
-
-        return false;
     }
 
 
@@ -84,10 +116,10 @@ class AvalexAPI {
             'last_checked' => $date->format("Y-m-d H:i:s")
         ));
 
-        if( $response ) {
-            return true;
-        } else {
+        if( $response instanceof \stdClass ) {
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -115,19 +147,19 @@ class AvalexAPI {
             // do this check only if cached version is older than 10 minutes
             if( !$updateCache || (time() - $oCache->date) > 600 ) {
 
-                if( $this->checkVersion($oCache->date) ) {
+                if( $this->checkVersion($oCache->date) === true ) {
                     $updateCache = true;
                 }
             }
 
             if( $updateCache ) {
 
-                $content = $this->send('/datenschutzerklaerung');
+                $response = $this->send('/datenschutzerklaerung');
 
-                if( !empty($content) ) {
+                if( !$response instanceof \stdClass ) {
 
                     $oCache->date = time();
-                    $oCache->content = $content;
+                    $oCache->content = $response;
 
                     $oModules->avalex_cache = json_encode($oCache);
                     $oModules->save();
@@ -182,7 +214,15 @@ class AvalexAPI {
                 $response = $request->get($url);
 
                 if( $response->getStatusCode() != 200 ) {
-                    return false;
+
+                    $message = json_decode( $response->getBody()->getContents() );
+
+                    $return = new \stdClass;
+                    $return->code = $response->getStatusCode();
+                    $return->data = $message->message;
+
+                    return $return;
+
                 } else {
                     return $response->getBody()->getContents();
                 }
@@ -195,17 +235,24 @@ class AvalexAPI {
 
                 $oRequest->send($url);
 
-                if( $oRequest->code != 200 ) {
-                    return false;
+                if($oRequest->code != 200 ) {
+
+                    $message = json_decode( $oRequest->response );
+
+                    $return = new \stdClass;
+                    $return->code =$oRequest->code;
+                    $return->data = $message->message;
+
+                    return $return;
+
                 } else {
-                    $responseBody = $oRequest->response;
+                    return $oRequest->response;
                 }
             }
 
         } catch( \Exception $e ) {
 
             \System::log('Exception while retrieving data from avalex (' . $e->getMessage() . ')', __METHOD__, TL_ERROR);
-
             return false;
         }
     }

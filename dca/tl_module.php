@@ -52,10 +52,15 @@ class tl_module_avalex extends \Backend {
             $oAPI = NULL;
             $oAPI = new \numero2\avalex\AvalexAPI( $value );
 
-            if( $oAPI->isConfigured() ) {
+            $configured = $oAPI->isConfigured();
+
+            if( $configured === true  ) {
+
                 \Message::addNew($GLOBALS['TL_LANG']['avalex']['msg']['key_valid']);
+
             } else {
-                \Message::addError($GLOBALS['TL_LANG']['avalex']['msg']['key_invalid']);
+
+                \Message::addError($configured);
                 return false;
             }
 

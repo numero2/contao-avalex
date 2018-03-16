@@ -23,3 +23,9 @@ $GLOBALS['FE_MOD']['miscellaneous']['avalex_privacy_policy'] = '\numero2\avalex\
  * HOOKS
  */
 $GLOBALS['TL_HOOKS']['getSystemMessages'][] = array('\numero2\avalex\AvalexBackend', 'getSystemMessages');
+
+
+/**
+ * CRONJOBS
+ */
+$GLOBALS['TL_CRON']['hourly'][] = array('\numero2\avalex\AvalexBackend', 'updatePrivacyPolicy');
