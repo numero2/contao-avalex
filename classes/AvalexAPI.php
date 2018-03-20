@@ -26,7 +26,7 @@ class AvalexAPI {
      * API Endpoint
      * @var string
      */
-    const API_ENDPOINT = 'https://beta.avalex.de';
+    const API_ENDPOINT = 'https://avalex.de';
 
 
     /**
