@@ -75,12 +75,14 @@ class AvalexAPI {
             // check if domains match
             if( !empty($res->domain) ) {
 
+                $domain = parse_url($res->domain, PHP_URL_HOST);
+
                 // check current domain
-                if( strpos( \Environment::get('host'), $res->domain ) !== 0 ) {
+                if( stripos( \Environment::get('host'), $domain ) === FALSE && stripos( $domain, \Environment::get('host')  ) === FALSE ) {
 
                     // check if we have any root page with matching domain
                     $oPages = NULL;
-                    $oPages = \PageModel::findOneBy( array('type=?','dns=?'), array('root',$res->domain) );
+                    $oPages = \PageModel::findOneBy( array('type=?','dns=?'), array('root',$domain) );
 
                     if( $oPages ) {
 
@@ -90,7 +92,7 @@ class AvalexAPI {
 
                         return sprintf(
                             $GLOBALS['TL_LANG']['avalex']['msg']['key_invalid_domain']
-                            ,   $res->domain
+                        ,   $domain
                         );
                     }
                 }
