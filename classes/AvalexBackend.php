@@ -57,7 +57,7 @@ class AvalexBackend {
 
         // find frontend module
         $oModules = NULL;
-        $oModules = \ModuleModel::findOneByType('avalex_privacy_policy');
+        $oModules = \ModuleModel::findByType('avalex_privacy_policy');
 
         if( $oModules ) {
 

@@ -76,6 +76,7 @@ class AvalexAPI {
             if( !empty($res->domain) ) {
 
                 $domain = parse_url($res->domain, PHP_URL_HOST);
+                $domain = !$domain?$res->domain:$domain;
 
                 // check current domain
                 if( stripos( \Environment::get('host'), $domain ) === FALSE && stripos( $domain, \Environment::get('host')  ) === FALSE ) {
