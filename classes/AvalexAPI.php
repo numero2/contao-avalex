@@ -141,7 +141,7 @@ class AvalexAPI {
 
         if( $oModules ) {
 
-            $oCache = new \stdClass;
+            $oCache = NULL;
             $oCache = json_decode($oModules->avalex_cache);
 
             // if empty or older than 6 hours force update of cache
@@ -165,6 +165,10 @@ class AvalexAPI {
                 $response = $this->send('/datenschutzerklaerung');
 
                 if( !$response instanceof \stdClass ) {
+
+                    if( !$oCache instanceof \stdClass ) {
+                        $oCache = new \stdClass;
+                    }
 
                     $oCache->date = time();
                     $oCache->content = $response;

@@ -22,10 +22,11 @@ $GLOBALS['FE_MOD']['miscellaneous']['avalex_privacy_policy'] = '\numero2\avalex\
 /**
  * HOOKS
  */
-$GLOBALS['TL_HOOKS']['getSystemMessages'][] = array('\numero2\avalex\AvalexBackend', 'getSystemMessages');
+$GLOBALS['TL_HOOKS']['getSystemMessages'][] = ['\numero2\avalex\AvalexBackend', 'getSystemMessages'];
 
 
 /**
  * CRONJOBS
  */
-$GLOBALS['TL_CRON']['hourly'][] = array('\numero2\avalex\AvalexBackend', 'updatePrivacyPolicy');
+$GLOBALS['TL_CRON']['daily'][] = ['\numero2\avalex\AvalexBackend', 'updateLastModuleVersion'];
+$GLOBALS['TL_CRON']['hourly'][] = ['\numero2\avalex\AvalexBackend', 'updatePrivacyPolicy'];

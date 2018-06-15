@@ -22,6 +22,10 @@
         <source>Last avalex update was on %s.</source>
         <target>Die avalex Datenschutzerklärung wurde zuletzt am %s aktualisiert.</target>
     </trans-unit>
+    <trans-unit id="avalex.msg.module_update">
+        <source>A new version [%s] of avalex is available, please update now.</source>
+        <target>Eine neue Version der avalex Erweiterung [%s] ist verfügbar, bitte updaten Sie jetzt.</target>
+    </trans-unit>
 </body>
 </file>
 </xliff>
