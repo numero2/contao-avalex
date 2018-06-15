@@ -27,6 +27,7 @@ class AvalexAPI {
      * @var string
      */
     const API_ENDPOINT = 'https://avalex.de';
+    const API_ENDPOINT_FALLBACK = 'https://proxy.avalex.de';
 
 
     /**
@@ -148,12 +149,16 @@ class AvalexAPI {
 
             // check if there is a newer version available to force an update
             // do this check only if cached version is older than 10 minutes
+
+            /*
+            // currently disabled because checkVersion reports false data
             if( !$updateCache || (time() - $oCache->date) > 600 ) {
 
                 if( $this->checkVersion($oCache->date) === true ) {
                     $updateCache = true;
                 }
             }
+            */
 
             if( $updateCache ) {
 
@@ -168,6 +173,15 @@ class AvalexAPI {
                     $oModules->save();
 
                 } else {
+
+                    \System::log(
+                        sprintf(
+                            'Error while retrieving data from avalex (%s)'
+                        ,   $response->code . ' ' . $response->data
+                        )
+                    ,   __METHOD__
+                    ,   TL_ERROR
+                    );
 
                     \Message::addError(
                         sprintf(
@@ -193,9 +207,9 @@ class AvalexAPI {
      * @param  array  $aParams
      * @return String
      */
-    private function send( $uri=NULL, $aParams=array() ) {
+    private function send( $uri=NULL, $aParams=[], $useFallback=false ) {
 
-        $url  = self::API_ENDPOINT.$uri.'?apikey='.$this->apiKey;
+        $url  = ($useFallback ? self::API_ENDPOINT_FALLBACK : self::API_ENDPOINT) . $uri . '?apikey=' . $this->apiKey;
 
         if( !empty($aParams) ) {
             $url .= '&'.http_build_query($aParams);
@@ -214,7 +228,19 @@ class AvalexAPI {
                     ]
                 );
 
-                $response = $request->get($url);
+                try {
+
+                    $response = $request->get($url);
+
+                } catch( \Exception $e ) {
+
+                    // use fallback domain if the main one does not work
+                    if( !$useFallback ) {
+                        return $this->send($uri, $aParams, true);
+                    }
+
+                    throw $e;
+                }
 
                 if( $response->getStatusCode() != 200 ) {
 
@@ -222,7 +248,7 @@ class AvalexAPI {
 
                     $return = new \stdClass;
                     $return->code = $response->getStatusCode();
-                    $return->data = $message->message;
+                    $return->data = $message->message ? $message->message : $response->getReasonPhrase();
 
                     return $return;
 
@@ -238,17 +264,26 @@ class AvalexAPI {
 
                 $oRequest->send($url);
 
-                if($oRequest->code != 200 ) {
+                if( $oRequest->error && strpos($oRequest->error, '110') !== FALSE ) {
+
+                    // use fallback domain if the main one does not work
+                    if( !$useFallback ) {
+                        return $this->send($uri, $aParams, true);
+                    }
+                }
+
+                if( $oRequest->code != 200 ) {
 
                     $message = json_decode( $oRequest->response );
 
                     $return = new \stdClass;
                     $return->code =$oRequest->code;
-                    $return->data = $message->message;
+                    $return->data = $message->message ? $message->message : $oRequest->error;
 
                     return $return;
 
                 } else {
+
                     return $oRequest->response;
                 }
             }
