@@ -30,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['avalex_apikey'] = array(
 ,   'sql'           => "varchar(255) NOT NULL default ''"
 );
 $GLOBALS['TL_DCA']['tl_module']['fields']['avalex_cache'] = array(
-    'sql'           => "blob NULL"
+    'sql'           => "mediumblob NULL"
 );
 
 
